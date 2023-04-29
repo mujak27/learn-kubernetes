@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: learn-replication
+  labels:
+    replicationLabel: replicate1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webserver
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - webserver
+      - key: env
+        operator: NotIn
+        values:
+          - production
+  template: 
+    metadata:
+      name: webserverpod
+      labels:
+        app: webserver
+    spec:
+      containers:
+        - name: webservernginx
+          image: nginx
+          ports:
+            - containerPort: 80
